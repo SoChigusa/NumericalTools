@@ -1,0 +1,49 @@
+\hypertarget{class_n_tools_1_1_boole_integrator}{}\section{N\+Tools\+::Boole\+Integrator Class Reference}
+\label{class_n_tools_1_1_boole_integrator}\index{NTools::BooleIntegrator@{NTools::BooleIntegrator}}
+
+
+Class for numerical integration using Boole\textquotesingle{}s rule.  
+
+
+
+
+{\ttfamily \#include $<$numericaltools.\+h$>$}
+
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static double \mbox{\hyperlink{class_n_tools_1_1_boole_integrator_abf91f56c5ad07dcaf995b4c81f7f970b}{integrate}} (double, std\+::vector$<$ double $>$)
+\begin{DoxyCompactList}\small\item\em Numerically integrate an input discrete data using Boole\textquotesingle{}s rule. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for numerical integration using Boole\textquotesingle{}s rule. 
+
+This is derived by the 4th order polynomial approximation using successive five discrete points. Please define \+\_\+\+N\+T\+O\+O\+L\+S\+\_\+\+U\+S\+E\+\_\+\+I\+N\+T\+E\+G\+R\+A\+T\+I\+ON to use this class. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_n_tools_1_1_boole_integrator_abf91f56c5ad07dcaf995b4c81f7f970b}\label{class_n_tools_1_1_boole_integrator_abf91f56c5ad07dcaf995b4c81f7f970b}} 
+\index{NTools::BooleIntegrator@{NTools::BooleIntegrator}!integrate@{integrate}}
+\index{integrate@{integrate}!NTools::BooleIntegrator@{NTools::BooleIntegrator}}
+\subsubsection{\texorpdfstring{integrate()}{integrate()}}
+{\footnotesize\ttfamily double N\+Tools\+::\+Boole\+Integrator\+::integrate (\begin{DoxyParamCaption}\item[{double}]{arg\+\_\+dx,  }\item[{std\+::vector$<$ double $>$}]{arg\+\_\+f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Numerically integrate an input discrete data using Boole\textquotesingle{}s rule. 
+
+This method uses 4th order polynomial approximation for the integration. Also, this can only be used when equally spaced data is provided. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em arg\+\_\+dx} & data spacing \\
+\hline
+\mbox{\texttt{ in}}  & {\em arg\+\_\+f} & discrete data set \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double integration result 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{numericaltools_8h}{numericaltools.\+h}}\end{DoxyCompactItemize}

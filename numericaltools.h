@@ -2,10 +2,9 @@
 /**
  * @file numericaltools.h
  * @brief Tools frequently used for numerical analysis
- *
- * So Chigusa
- * Created on 2018/02/09
- **/
+ * @author So Chigusa
+ * @date 2018/02/09
+ */
 
 #ifndef NUMERICALTOOLS_H
 #define NUMERICALTOOLS_H
@@ -49,6 +48,9 @@
 #include <TRandom3.h>
 #endif
 
+/**
+ * @brief Summarizing class of all functions
+ */
 class NTools {
 public:
 
@@ -66,7 +68,13 @@ public:
 #ifdef _NTOOLS_USE_INTEGRATION
 
   //--------- Simpson Integrator (2nd order) ---------
-  
+  /**
+   * @brief Class for numerical integration using Simpson
+   * @details 
+   * This is derived by the 2nd order polynomial approximation
+   * using successive three discrete points.
+   * Please define _NTOOLS_USE_INTEGRATION to use this class.
+   */
   class SimpsonIntegrator {
   public:
     static double integrate(std::function<double(double)>, double, double, double);
@@ -74,14 +82,24 @@ public:
   };
 
   //--------- Boole Integrator (4th order) ---------
-  
+  /**
+   * @brief Class for numerical integration using Boole's rule
+   * @details 
+   * This is derived by the 4th order polynomial approximation
+   * using successive five discrete points.
+   * Please define _NTOOLS_USE_INTEGRATION to use this class.
+   */
   class BooleIntegrator {
   public:
     static double integrate(double, std::vector<double>);
   };
   
   //--------- Spline Interpolator ---------
-
+  /**
+   * @brief Class for spline interpolation of discrete data
+   * @details
+   * Please define _NTOOLS_USE_INTEGRATION to use this class.
+   */
   class SplineInterpolator {
   private:
     std::vector<double> endpoint;
@@ -91,6 +109,13 @@ public:
     double at(double);
     double integrate();
     double integrate(double, double);
+    /**
+     * @brief Check if interpolation has been done
+     * @details 
+     * It is recommended to check if this method returns true
+     * before using at(double), integrate(), or integrate(double,double) method.
+     * @returns true if interpolation has been performed
+     */
     bool IsUsed(void) { return !endpoint.empty(); };
   };
 #endif
@@ -176,8 +201,16 @@ void NTools::split(const std::string &buffer, const char delim,
 #endif
 
 #ifdef _NTOOLS_USE_INTEGRATION
+/**
+ * @brief Numerically integrate an input analytic function
+ * @param[in] arg_f input function
+ * @param[in] arg_x0 minimum integration range
+ * @param[in] arg_x1 maximum integration range
+ * @param[in] arg_dx integration step
+ * @return double integration result
+ */
 double NTools::SimpsonIntegrator::integrate(std::function<double(double)> arg_f,
-						   double arg_x0, double arg_x1, double arg_dx)
+					    double arg_x0, double arg_x1, double arg_dx)
 {
   double res = 0.;
   double xmd;
@@ -195,6 +228,18 @@ double NTools::SimpsonIntegrator::integrate(std::function<double(double)> arg_f,
   return res;
 }
 
+/**
+ * @brief Numerically integrate an input discrete data
+ * @param[in] arg_flag
+ * flag to control integration method:
+ * "Simpson" use the Simpson integration method.
+ * This method can only be used when equally spaced data is provided.
+ * "Spline" first interpolates the date using spline
+ * and perform the integration using interpolation parameters.
+ * @param[in] arg_x discrete coordinate set
+ * @param[in] arg_f discrete data set
+ * @return double integration result
+ */
 double NTools::SimpsonIntegrator::integrate(std::string arg_flag, std::vector<double> arg_x, std::vector<double> arg_f)
 {
   const int nmesh = arg_x.size();
@@ -234,6 +279,14 @@ double NTools::SimpsonIntegrator::integrate(std::string arg_flag, std::vector<do
   return res;
 }
 
+/**
+ * @brief Numerically integrate an input discrete data using Boole's rule
+ * @details This method uses 4th order polynomial approximation for the integration.
+ * Also, this can only be used when equally spaced data is provided.
+ * @param[in] arg_dx data spacing
+ * @param[in] arg_f discrete data set
+ * @return double integration result
+ */
 double NTools::BooleIntegrator::integrate(double arg_dx, std::vector<double> arg_f) {
   double res = 0.;
   const int nmesh = arg_f.size();
@@ -250,6 +303,13 @@ double NTools::BooleIntegrator::integrate(double arg_dx, std::vector<double> arg
   return res;
 }
 
+/**
+ * @brief Perform spline interpolation of discrete data
+ * @details Results of the interpolation are stored in private members
+ * and can be accessed through the NTools::SplineInterpolator::at method.
+ * @param[in] arg_x discrete coordinate set
+ * @param[in] arg_y discrete data set
+ */
 void NTools::SplineInterpolator::interpolate(std::vector<double> arg_x, std::vector<double> arg_y)
 {
   const int n = arg_x.size()-1;
@@ -296,6 +356,11 @@ void NTools::SplineInterpolator::interpolate(std::vector<double> arg_x, std::vec
   }
 }
 
+/**
+ * @brief Access the interpolation result
+ * @param[in] arg_x coordinate to be accessed
+ * @returns data at the point
+ */
 double NTools::SplineInterpolator::at(double arg_x)
 {
   const int n = endpoint.size()-1;
@@ -315,11 +380,21 @@ double NTools::SplineInterpolator::at(double arg_x)
   return p[nregion]+q[nregion]*xx+r[nregion]*xx*xx+s[nregion]*xx*xx*xx;
 }
 
+/**
+ * @brief Integrate the whole range of interpolation
+ * @returns integration result
+ */
 double NTools::SplineInterpolator::integrate()
 {
   return integrate(endpoint.front(), endpoint.back());
 }
 
+/**
+ * @brief Integrate over the given range within the interpolation range
+ * @param[in] arg_x0 minimum integration range
+ * @param[in] arg_x1 maximum integration range
+ * @returns integration result
+ */
 double NTools::SplineInterpolator::integrate(double arg_x0, double arg_x1)
 {
   if(arg_x0 < endpoint.front() || arg_x0 > endpoint.back() ||

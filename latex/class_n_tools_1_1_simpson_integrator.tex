@@ -1,0 +1,77 @@
+\hypertarget{class_n_tools_1_1_simpson_integrator}{}\section{N\+Tools\+::Simpson\+Integrator Class Reference}
+\label{class_n_tools_1_1_simpson_integrator}\index{NTools::SimpsonIntegrator@{NTools::SimpsonIntegrator}}
+
+
+Class for numerical integration using Simpson.  
+
+
+
+
+{\ttfamily \#include $<$numericaltools.\+h$>$}
+
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static double \mbox{\hyperlink{class_n_tools_1_1_simpson_integrator_ab989aba56e07fc91b5a09c71489a1a6e}{integrate}} (std\+::function$<$ double(double)$>$, double, double, double)
+\begin{DoxyCompactList}\small\item\em Numerically integrate an input analytic function. \end{DoxyCompactList}\item 
+static double \mbox{\hyperlink{class_n_tools_1_1_simpson_integrator_af78fc1bfc5b95adeea5beed752f4a9c9}{integrate}} (std\+::string, std\+::vector$<$ double $>$, std\+::vector$<$ double $>$)
+\begin{DoxyCompactList}\small\item\em Numerically integrate an input discrete data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for numerical integration using Simpson. 
+
+This is derived by the 2nd order polynomial approximation using successive three discrete points. Please define \+\_\+\+N\+T\+O\+O\+L\+S\+\_\+\+U\+S\+E\+\_\+\+I\+N\+T\+E\+G\+R\+A\+T\+I\+ON to use this class. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_n_tools_1_1_simpson_integrator_ab989aba56e07fc91b5a09c71489a1a6e}\label{class_n_tools_1_1_simpson_integrator_ab989aba56e07fc91b5a09c71489a1a6e}} 
+\index{NTools::SimpsonIntegrator@{NTools::SimpsonIntegrator}!integrate@{integrate}}
+\index{integrate@{integrate}!NTools::SimpsonIntegrator@{NTools::SimpsonIntegrator}}
+\subsubsection{\texorpdfstring{integrate()}{integrate()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double N\+Tools\+::\+Simpson\+Integrator\+::integrate (\begin{DoxyParamCaption}\item[{std\+::function$<$ double(double)$>$}]{arg\+\_\+f,  }\item[{double}]{arg\+\_\+x0,  }\item[{double}]{arg\+\_\+x1,  }\item[{double}]{arg\+\_\+dx }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Numerically integrate an input analytic function. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em arg\+\_\+f} & input function \\
+\hline
+\mbox{\texttt{ in}}  & {\em arg\+\_\+x0} & minimum integration range \\
+\hline
+\mbox{\texttt{ in}}  & {\em arg\+\_\+x1} & maximum integration range \\
+\hline
+\mbox{\texttt{ in}}  & {\em arg\+\_\+dx} & integration step \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double integration result 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_n_tools_1_1_simpson_integrator_af78fc1bfc5b95adeea5beed752f4a9c9}\label{class_n_tools_1_1_simpson_integrator_af78fc1bfc5b95adeea5beed752f4a9c9}} 
+\index{NTools::SimpsonIntegrator@{NTools::SimpsonIntegrator}!integrate@{integrate}}
+\index{integrate@{integrate}!NTools::SimpsonIntegrator@{NTools::SimpsonIntegrator}}
+\subsubsection{\texorpdfstring{integrate()}{integrate()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double N\+Tools\+::\+Simpson\+Integrator\+::integrate (\begin{DoxyParamCaption}\item[{std\+::string}]{arg\+\_\+flag,  }\item[{std\+::vector$<$ double $>$}]{arg\+\_\+x,  }\item[{std\+::vector$<$ double $>$}]{arg\+\_\+f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Numerically integrate an input discrete data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em arg\+\_\+flag} & flag to control integration method\+: \char`\"{}\+Simpson\char`\"{} use the Simpson integration method. This method can only be used when equally spaced data is provided. \char`\"{}\+Spline\char`\"{} first interpolates the date using spline and perform the integration using interpolation parameters. \\
+\hline
+\mbox{\texttt{ in}}  & {\em arg\+\_\+x} & discrete coordinate set \\
+\hline
+\mbox{\texttt{ in}}  & {\em arg\+\_\+f} & discrete data set \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+double integration result 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{numericaltools_8h}{numericaltools.\+h}}\end{DoxyCompactItemize}

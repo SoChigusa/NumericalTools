@@ -1,0 +1,118 @@
+\hypertarget{class_n_tools_1_1_spline_interpolator}{}\section{N\+Tools\+::Spline\+Interpolator Class Reference}
+\label{class_n_tools_1_1_spline_interpolator}\index{NTools::SplineInterpolator@{NTools::SplineInterpolator}}
+
+
+Class for spline interpolation of discrete data.  
+
+
+
+
+{\ttfamily \#include $<$numericaltools.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_n_tools_1_1_spline_interpolator_aebbfd2aec32caa7803aa4025b52bff0d}{interpolate}} (std\+::vector$<$ double $>$, std\+::vector$<$ double $>$)
+\begin{DoxyCompactList}\small\item\em Perform spline interpolation of discrete data. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_n_tools_1_1_spline_interpolator_a6c97e5781f96b2c5025cb23b3b2df27c}{at}} (double)
+\begin{DoxyCompactList}\small\item\em Access the interpolation result. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_n_tools_1_1_spline_interpolator_a2551cbbe2a947b73ff22edf74351a12e}{integrate}} ()
+\begin{DoxyCompactList}\small\item\em Integrate the whole range of interpolation. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{class_n_tools_1_1_spline_interpolator_aa7dadf8466c74b42804fe248158c07f5}{integrate}} (double, double)
+\begin{DoxyCompactList}\small\item\em Integrate over the given range within the interpolation range. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_n_tools_1_1_spline_interpolator_a0e72de79c14d3288a065fc2da8be716c}{Is\+Used}} (void)
+\begin{DoxyCompactList}\small\item\em Check if interpolation has been done. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for spline interpolation of discrete data. 
+
+Please define \+\_\+\+N\+T\+O\+O\+L\+S\+\_\+\+U\+S\+E\+\_\+\+I\+N\+T\+E\+G\+R\+A\+T\+I\+ON to use this class. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_n_tools_1_1_spline_interpolator_a6c97e5781f96b2c5025cb23b3b2df27c}\label{class_n_tools_1_1_spline_interpolator_a6c97e5781f96b2c5025cb23b3b2df27c}} 
+\index{NTools::SplineInterpolator@{NTools::SplineInterpolator}!at@{at}}
+\index{at@{at}!NTools::SplineInterpolator@{NTools::SplineInterpolator}}
+\subsubsection{\texorpdfstring{at()}{at()}}
+{\footnotesize\ttfamily double N\+Tools\+::\+Spline\+Interpolator\+::at (\begin{DoxyParamCaption}\item[{double}]{arg\+\_\+x }\end{DoxyParamCaption})}
+
+
+
+Access the interpolation result. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em arg\+\_\+x} & coordinate to be accessed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+data at the point 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_n_tools_1_1_spline_interpolator_a2551cbbe2a947b73ff22edf74351a12e}\label{class_n_tools_1_1_spline_interpolator_a2551cbbe2a947b73ff22edf74351a12e}} 
+\index{NTools::SplineInterpolator@{NTools::SplineInterpolator}!integrate@{integrate}}
+\index{integrate@{integrate}!NTools::SplineInterpolator@{NTools::SplineInterpolator}}
+\subsubsection{\texorpdfstring{integrate()}{integrate()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double N\+Tools\+::\+Spline\+Interpolator\+::integrate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Integrate the whole range of interpolation. 
+
+\begin{DoxyReturn}{Returns}
+integration result 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_n_tools_1_1_spline_interpolator_aa7dadf8466c74b42804fe248158c07f5}\label{class_n_tools_1_1_spline_interpolator_aa7dadf8466c74b42804fe248158c07f5}} 
+\index{NTools::SplineInterpolator@{NTools::SplineInterpolator}!integrate@{integrate}}
+\index{integrate@{integrate}!NTools::SplineInterpolator@{NTools::SplineInterpolator}}
+\subsubsection{\texorpdfstring{integrate()}{integrate()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double N\+Tools\+::\+Spline\+Interpolator\+::integrate (\begin{DoxyParamCaption}\item[{double}]{arg\+\_\+x0,  }\item[{double}]{arg\+\_\+x1 }\end{DoxyParamCaption})}
+
+
+
+Integrate over the given range within the interpolation range. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em arg\+\_\+x0} & minimum integration range \\
+\hline
+\mbox{\texttt{ in}}  & {\em arg\+\_\+x1} & maximum integration range \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+integration result 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_n_tools_1_1_spline_interpolator_aebbfd2aec32caa7803aa4025b52bff0d}\label{class_n_tools_1_1_spline_interpolator_aebbfd2aec32caa7803aa4025b52bff0d}} 
+\index{NTools::SplineInterpolator@{NTools::SplineInterpolator}!interpolate@{interpolate}}
+\index{interpolate@{interpolate}!NTools::SplineInterpolator@{NTools::SplineInterpolator}}
+\subsubsection{\texorpdfstring{interpolate()}{interpolate()}}
+{\footnotesize\ttfamily void N\+Tools\+::\+Spline\+Interpolator\+::interpolate (\begin{DoxyParamCaption}\item[{std\+::vector$<$ double $>$}]{arg\+\_\+x,  }\item[{std\+::vector$<$ double $>$}]{arg\+\_\+y }\end{DoxyParamCaption})}
+
+
+
+Perform spline interpolation of discrete data. 
+
+Results of the interpolation are stored in private members and can be accessed through the \mbox{\hyperlink{class_n_tools_1_1_spline_interpolator_a6c97e5781f96b2c5025cb23b3b2df27c}{N\+Tools\+::\+Spline\+Interpolator\+::at}} method. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em arg\+\_\+x} & discrete coordinate set \\
+\hline
+\mbox{\texttt{ in}}  & {\em arg\+\_\+y} & discrete data set \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_n_tools_1_1_spline_interpolator_a0e72de79c14d3288a065fc2da8be716c}\label{class_n_tools_1_1_spline_interpolator_a0e72de79c14d3288a065fc2da8be716c}} 
+\index{NTools::SplineInterpolator@{NTools::SplineInterpolator}!IsUsed@{IsUsed}}
+\index{IsUsed@{IsUsed}!NTools::SplineInterpolator@{NTools::SplineInterpolator}}
+\subsubsection{\texorpdfstring{IsUsed()}{IsUsed()}}
+{\footnotesize\ttfamily bool N\+Tools\+::\+Spline\+Interpolator\+::\+Is\+Used (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check if interpolation has been done. 
+
+It is recommended to check if this method returns true before using \mbox{\hyperlink{class_n_tools_1_1_spline_interpolator_a6c97e5781f96b2c5025cb23b3b2df27c}{at(double)}}, \mbox{\hyperlink{class_n_tools_1_1_spline_interpolator_a2551cbbe2a947b73ff22edf74351a12e}{integrate()}}, or \mbox{\hyperlink{class_n_tools_1_1_spline_interpolator_aa7dadf8466c74b42804fe248158c07f5}{integrate(double,double)}} method. \begin{DoxyReturn}{Returns}
+true if interpolation has been performed 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{numericaltools_8h}{numericaltools.\+h}}\end{DoxyCompactItemize}
