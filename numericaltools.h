@@ -1,10 +1,11 @@
 
-/* 
- * File:   numericaltools.h
- * Author: So Chigusa
+/**
+ * @file numericaltools.h
+ * @brief Tools frequently used for numerical analysis
  *
+ * So Chigusa
  * Created on 2018/02/09
- */
+ **/
 
 #ifndef NUMERICALTOOLS_H
 #define NUMERICALTOOLS_H
@@ -23,7 +24,7 @@
 /*
  * NEED -lMinuit2 when make
  */
-#define _NTOOLS_USE_MINUIT2
+/* #define _NTOOLS_USE_MINUIT2 */
 
 #include <math.h>
 #include <iostream>
@@ -61,14 +62,22 @@ public:
   static void split(const std::string &buffer, const char delim,
 		    std::vector<double> &v);
 #endif
-  
-  //--------- Simpson Integrator ---------
 
 #ifdef _NTOOLS_USE_INTEGRATION
+
+  //--------- Simpson Integrator (2nd order) ---------
+  
   class SimpsonIntegrator {
   public:
     static double integrate(std::function<double(double)>, double, double, double);
     static double integrate(std::string, std::vector<double>, std::vector<double>);
+  };
+
+  //--------- Boole Integrator (4th order) ---------
+  
+  class BooleIntegrator {
+  public:
+    static double integrate(double, std::vector<double>);
   };
   
   //--------- Spline Interpolator ---------
@@ -222,6 +231,22 @@ double NTools::SimpsonIntegrator::integrate(std::string arg_flag, std::vector<do
   else {
     throw "Unsupported flag for SimpsonIntegrator\n";
   }
+  return res;
+}
+
+double NTools::BooleIntegrator::integrate(double arg_dx, std::vector<double> arg_f) {
+  double res = 0.;
+  const int nmesh = arg_f.size();
+  static const double f29o24 = 29./24.;
+  static const double f71o24 = 71./24.;
+  static const double f35o24 = 35./24.;
+  static const double to45 = 2./45.;
+  res += f29o24*arg_f[0]+f71o24*arg_f[1]+f35o24*arg_f[2]+0.375*arg_f[3]; // 1st, 2nd, 3rd order
+  res += 0.375*arg_f[nmesh-4]+f35o24*arg_f[nmesh-3]+f71o24*arg_f[nmesh-2]+f29o24*arg_f[nmesh-1];
+  for(int i = 2; i < nmesh-2; ++i) {// 1st order
+    res += to45*(7.*arg_f[i-2] + 32.*arg_f[i-1] + 12.*arg_f[i] + 32.*arg_f[i+1] + 7.*arg_f[i+2]);
+  }
+  res *= 0.25 * arg_dx; // treat over-counting & spacing
   return res;
 }
 
@@ -512,4 +537,4 @@ void NTools::Minimization::minimize_initial_scan
 //  const ROOT::Minuit2::EMinimizerType arg_type);
 #endif
 
-#endif
+#endif // NUMERICALTOOLS_H
