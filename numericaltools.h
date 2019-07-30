@@ -10,19 +10,9 @@
 #define NUMERICALTOOLS_H
 
 /* #define _NTOOLS_USE_GETLINE */
-
-#define _NTOOLS_USE_INTEGRATION // and interpolation
+/* #define _NTOOLS_USE_INTEGRATION */
 /* #define _NTOOLS_CHECK_ASCEND */
 /* #define _NTOOLS_USE_PROGRESSBAR */
-
-/*
- * NEED -lMinuit when make
- */
-/* #define _NTOOLS_USE_TMINUIT */
-
-/*
- * NEED -lMinuit2 when make
- */
 /* #define _NTOOLS_USE_MINUIT2 */
 
 #include <math.h>
@@ -53,16 +43,24 @@
  */
 class NTools {
 public:
-
-  //--------- getline usable for string delimiter ---------
   
 #ifdef _NTOOLS_USE_GETLINE
-  static void split(const std::string &buffer, const std::string &delim_old,
-		    std::vector<std::string> &v, const char delim = ' ');
-  static void split(const std::string &buffer, const char delim,
-		    std::vector<std::string> &v);
-  static void split(const std::string &buffer, const char delim,
-		    std::vector<double> &v);
+
+  //--------- getline usable for string delimiter ---------
+  /**
+   * @brief Class for splitting string by a delimiter
+   * @details Please define _NTOOLS_USE_GETLINE to use this class.
+   */
+  class DelimiterSplitting {
+  public:
+    static void split(const std::string &buffer, const std::string &delim_old,
+		      std::vector<std::string> &v, const char delim = ' ');
+    static void split(const std::string &buffer, const char delim,
+		      std::vector<std::string> &v);
+    static void split(const std::string &buffer, const char delim,
+		      std::vector<double> &v);
+  };
+  
 #endif
 
 #ifdef _NTOOLS_USE_INTEGRATION
@@ -119,10 +117,16 @@ public:
     bool IsUsed(void) { return !endpoint.empty(); };
   };
 #endif
-  
-  //--------- Progress Bar ---------
 
 #ifdef _NTOOLS_USE_PROGRESSBAR
+
+  //--------- Progress Bar ---------
+  /**
+   * @brief Class for showing progress bar
+   * @details
+   * It can be used only when the total amount of the calculation
+   * is known in advance.  Please define _NTOOLS_USE_PROGRESSBAR to use this class.
+   */
   class ProgressBar {
   private:
     int pr;
@@ -132,24 +136,17 @@ public:
     void tick();
   };
 #endif
-  
-  //--------- Wrapper for ROOT Minuit ---------
-
-#ifdef _NTOOLS_USE_TMINUIT
-  class Minimization {
-  public:
-    static void minimize(double &, std::vector<double> & arg_par, std::vector<double> & arg_parerr,
-			 void(*arg_fcn)(Int_t &, Double_t *, Double_t &f, Double_t *, Int_t),
-			 const std::vector<double> arg_vstart, const std::vector<double> arg_step);
-  };
-
-  /* !!!!!!!!! example of the input function !!!!!!!!! */
-  /* void chi2(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag){ */
-  /*   f = par[0]*par[0] + par[0] + 1; */
-  /* } */
-#endif
 
 #ifdef _NTOOLS_USE_MINUIT2
+
+  //--------- Wrapper for ROOT Minuit2 ---------
+  /**
+   * @brief Wrapper class for use of Minuit2
+   * @details Please define _NTOOLS_USE_MINUIT2 and
+   * use compile options below:
+   * "ROOTFLAGS = $(shell root-config --cflags)" and
+   * "ROOTLIBS = $(shell root-config --libs) -lMinuit2".
+   */
   class Minimization {
   public:
     static void minimize(double &, std::vector<double> &, std::vector<double> &,
@@ -169,8 +166,19 @@ public:
 //--------- Implementation ---------
 
 #ifdef _NTOOLS_USE_GETLINE
-void NTools::split(const std::string &buffer, const std::string &delim_old,
-		   std::vector<std::string> &v, const char delim) {
+
+/**
+ * @brief Split string using string delimiter
+ * @param[in] buffer input string
+ * @param[in] delim_old delimiter
+ * @param[out] v result of the splitting
+ * @param[in] delim
+ * String delimiter is replaced to a character delimiter "delim" first.
+ * The character used is input here.  Please use a character which is
+ * not originally contained in the string.
+ */
+void NTools::DelimiterSplitting::split(const std::string &buffer, const std::string &delim_old,
+				       std::vector<std::string> &v, const char delim) {
   // replacement from delim_old -> delim
   const std::string str_delim{delim};
   std::string s(buffer);
@@ -183,24 +191,38 @@ void NTools::split(const std::string &buffer, const std::string &delim_old,
   split(s, delim, v);
 }
 
-void NTools::split(const std::string &buffer, const char delim,
-	     std::vector<std::string> &v) {
+/**
+ * @brief Split string using a character delimiter
+ * @param[in] buffer input string
+ * @param[in] delim delimiter
+ * @param[out] v result of the splitting
+ */
+void NTools::DelimiterSplitting::split(const std::string &buffer, const char delim,
+				       std::vector<std::string> &v) {
   v.resize(0);
   std::stringstream ss(buffer);
   std::string mbuf;
   while(getline(ss, mbuf, delim)) { if(mbuf != "") v.push_back(mbuf); }
 }
 
-void NTools::split(const std::string &buffer, const char delim,
-	     std::vector<double> &v) {
+/**
+ * @brief Split string that consists of numbers using a character delimiter
+ * @param[in] buffer input string
+ * @param[in] delim delimiter
+ * @param[out] v result of the splitting in "double"
+ */
+void NTools::DelimiterSplitting::split(const std::string &buffer, const char delim,
+				       std::vector<double> &v) {
   v.resize(0);
   std::stringstream ss(buffer);
   std::string mbuf;
   while(getline(ss, mbuf, delim)) { if(mbuf != "") v.push_back(stod(mbuf)); }
 }
+
 #endif
 
 #ifdef _NTOOLS_USE_INTEGRATION
+
 /**
  * @brief Numerically integrate an input analytic function
  * @param[in] arg_f input function
@@ -428,12 +450,20 @@ double NTools::SplineInterpolator::integrate(double arg_x0, double arg_x1)
 #endif
 
 #ifdef _NTOOLS_USE_PROGRESSBAR
+
+/**
+ * @brief Constructor with initial setting
+ * @param[in] arg_e finish time
+ */
 NTools::ProgressBar::ProgressBar(int arg_e)
 : pr(0), end(arg_e)
 {
   std::cout << "------------------ ProgressBar -------------------" << std::endl;
 }
 
+/**
+ * @brief Advance the time by one
+ */
 void NTools::ProgressBar::tick()
 {
   pr++;
@@ -444,66 +474,21 @@ void NTools::ProgressBar::tick()
   }
 }
 #endif
-		 
-#ifdef _NTOOLS_USE_TMINUIT
-void NTools::Minimization::minimize(double &res_min,
-				    std::vector<double> & arg_par, std::vector<double> & arg_parerr,
-				    void(*arg_fcn)(Int_t &, Double_t *, Double_t &f, Double_t *, Int_t),
-				    const std::vector<double> arg_vstart, const std::vector<double> arg_step)
-{
-  const int nparam = arg_vstart.size();
-  if(nparam != arg_step.size()) {
-    throw "Mismatch between start values and steps sizes\n";
-  }
-  
-  TMinuit *gMinuit = new TMinuit(nparam);
-  gMinuit->SetPrintLevel(-1);
-  gMinuit->SetFCN(arg_fcn);
-  
-  Int_t ierflg = 0;
-  for(int i = 0; i < nparam; i++)
-    /* gMinuit->mnparm(i, "name", arg_vstart[i], arg_step[i], 0, 0, ierflg); */
-    gMinuit->mnparm(i, "name", arg_vstart[i], arg_step[i], -arg_step[i]*10, arg_step[i]*10, ierflg);
-
-  double par, parerr;
-  for(int i = nparam-6; i < nparam-1; i++) {
-    gMinuit->GetParameter(i, par, parerr);
-    std::cout << par << " ";
-  }
-  std::cout << std::endl;
-
-  // adjust the error definition for likelihood fits
-  double arg_list[2];
-  arg_list[0] = 0.5;
-  gMinuit->mnexcm("SET ERR", arg_list, 1, ierflg);
-  
-  arg_list[0] = 500.; // Max Iteration
-  arg_list[1] = 1.;   // Tolerance
-  gMinuit->mnexcm("SIMplex", arg_list, 2, ierflg);
-  for(int i = nparam-6; i < nparam-1; i++) {
-    gMinuit->GetParameter(i, par, parerr);
-    std::cout << par << " ";
-  }
-  std::cout << std::endl;
-  
-  /* gMinuit->Migrad(); */
-  arg_par.resize(nparam);
-  arg_parerr.resize(nparam);
-  for(int i = 0; i < nparam; i++) {
-    gMinuit->GetParameter(i, par, parerr);
-    arg_par[i] = par;
-    arg_parerr[i] = parerr;
-  }
-
-  Int_t tmp, tmp2;
-  Double_t tmpd;
-  arg_fcn(tmp, &tmpd, res_min, arg_par.data(), tmp2);
-  
-  delete gMinuit;
-}
-#endif
 
 #ifdef _NTOOLS_USE_MINUIT2
+
+/**
+ * @brief Minimize the given function
+ * @param[out] res_min result minimum value of the function
+ * @param[out] arg_par result minimization parameter set
+ * @param[out] arg_parerr error estimation for the parameter set
+ * @param[in] arg_func input function
+ * @param[in] arg_vstart initial values for the parameter set
+ * @param[in] arg_step minimization step for the parameter set
+ * @param[in] arg_tol tolerance setting
+ * @param[in] arg_type minimization method
+ * Default value is set to ROOT::Minuit2::kMigrad.
+ */
 void NTools::Minimization::minimize(double & res_min,
 				    std::vector<double> & arg_par,
 				    std::vector<double> & arg_parerr,
@@ -549,7 +534,23 @@ void NTools::Minimization::minimize(double & res_min,
   /* min.Scan(4, nstep, x, y, 0., 0.); */
   /* min.Scan(5, nstep, x, y, 0., 0.); */
 }
- 
+
+/**
+ * @brief Minimize the given function with scanning the initial values
+ * @details
+ * Initial values are distributed according to the
+ * Gaussian distribution with average at arg_vstart and 
+ * the standard deviation 2 x arg_step.
+ * @param[out] res_min result minimum value of the function
+ * @param[out] arg_par result minimization parameter set
+ * @param[out] arg_parerr error estimation for the parameter set
+ * @param[in] arg_func input function
+ * @param[in] arg_vstart initial values for the parameter set
+ * @param[in] arg_step minimization step for the parameter set
+ * @param[in] arg_tol tolerance setting
+ * @param[in] arg_type minimization method
+ * Default value is set to ROOT::Minuit2::kMigrad.
+ */
 void NTools::Minimization::minimize_initial_scan
 (double & res_min,
  std::vector<double> & arg_par,
@@ -568,7 +569,6 @@ void NTools::Minimization::minimize_initial_scan
     std::vector<double> vstart(arg_vstart.size());
     for(int j = 0; j < vstart.size(); j++) {
       vstart[j] = rgen.Gaus(arg_vstart[j], 2.*arg_step[j]);
-      // vstart[j] = arg_vstart[j] + 10. * (1. - 2.*rgen.Rndm()) * arg_step[j];
     }
     NTools::Minimization::minimize(res_tmp, par, parerr, arg_func,
 				   vstart, arg_step, arg_tol, arg_type);
@@ -588,28 +588,6 @@ void NTools::Minimization::minimize_initial_scan
   /*   } */
   /* } */
 }
-
-// instance of template
-// template void NTools::Minimization::minimize<double (*)(const double *)>
-// (double & res_min,
-//  std::vector<double> & arg_par,
-//  std::vector<double> & arg_parerr,
-//  double (*arg_func)(const double *),
-//  const std::vector<double> & arg_vstart,
-//  const std::vector<double> & arg_step,
-//  const double arg_tol,
-//  const ROOT::Minuit2::EMinimizerType arg_type);
-
-// template void NTools::Minimization::minimize_initial_scan<double (*)(const double *)>
-// (double & res_min,
-//  std::vector<double> & arg_par,
-//  std::vector<double> & arg_parerr,
-//  double (*arg_func)(const double *),
-//  const std::vector<double> & arg_vstart,
-//  const std::vector<double> & arg_step,
-//  const double arg_tol,
-//  const unsigned int nscan,
-//  const ROOT::Minuit2::EMinimizerType arg_type);
 #endif
 
 #endif // NUMERICALTOOLS_H

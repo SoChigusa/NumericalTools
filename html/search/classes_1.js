@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ntools',['NTools',['../class_n_tools.html',1,'']]]
+  ['delimitersplitting',['DelimiterSplitting',['../class_n_tools_1_1_delimiter_splitting.html',1,'NTools']]]
 ];
