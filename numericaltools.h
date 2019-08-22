@@ -304,25 +304,25 @@ double NTools::SimpsonIntegrator::integrate(std::string arg_flag, std::vector<do
 /**
  * @brief Numerically integrate an input discrete data using Boole's rule
  * @details This method uses 4th order polynomial approximation for the integration.
- * Also, this can only be used when equally spaced data is provided.
+ * Also, this can only be used when equally spaced data is provided
+ * and the number of spacing is 4 times some integer.
  * @param[in] arg_dx data spacing
  * @param[in] arg_f discrete data set
  * @return double integration result
  */
 double NTools::BooleIntegrator::integrate(double arg_dx, std::vector<double> arg_f) {
-  double res = 0.;
-  const int nmesh = arg_f.size();
-  static const double f29o24 = 29./24.;
-  static const double f71o24 = 71./24.;
-  static const double f35o24 = 35./24.;
-  static const double to45 = 2./45.;
-  res += f29o24*arg_f[0]+f71o24*arg_f[1]+f35o24*arg_f[2]+0.375*arg_f[3]; // 1st, 2nd, 3rd order
-  res += 0.375*arg_f[nmesh-4]+f35o24*arg_f[nmesh-3]+f71o24*arg_f[nmesh-2]+f29o24*arg_f[nmesh-1];
-  for(int i = 2; i < nmesh-2; ++i) {// 1st order
-    res += to45*(7.*arg_f[i-2] + 32.*arg_f[i-1] + 12.*arg_f[i] + 32.*arg_f[i+1] + 7.*arg_f[i+2]);
+  const int nspac = arg_f.size()-1;
+  if(nspac % 4 != 0) {
+    std::cout << "BooleIntegrator: the number of spacing should be 4 times some integer."
+	      << std::endl;
+    return 0.;
   }
-  res *= 0.25 * arg_dx; // treat over-counting & spacing
-  return res;
+  double res = 0.;
+  static const double to45 = 2./45.;
+  for(int i = 0; i < nspac; i += 4) { // 4th order
+    res += to45*(7.*arg_f[i] + 32.*arg_f[i+1] + 12.*arg_f[i+2] + 32.*arg_f[i+3] + 7.*arg_f[i+4]);
+  }
+  return res * arg_dx; // spacing
 }
 
 /**
