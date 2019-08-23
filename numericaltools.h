@@ -10,6 +10,7 @@
 #define NUMERICALTOOLS_H
 
 /* #define _NTOOLS_USE_GETLINE */
+/* #define _NTOOLS_USE_OPTIONS */
 /* #define _NTOOLS_USE_INTEGRATION */
 /* #define _NTOOLS_CHECK_ASCEND */
 /* #define _NTOOLS_USE_PROGRESSBAR */
@@ -17,11 +18,15 @@
 
 #include <math.h>
 #include <iostream>
+#include <string>
 #include <vector>
 
 #ifdef _NTOOLS_USE_GETLINE
 #include <sstream>
-#include <string>
+#endif
+
+#ifdef _NTOOLS_USE_OPTIONS
+#include <map>
 #endif
 
 #ifdef _NTOOLS_CHECK_ASCEND
@@ -46,7 +51,6 @@ public:
   
 #ifdef _NTOOLS_USE_GETLINE
 
-  //--------- getline usable for string delimiter ---------
   /**
    * @brief Class for splitting string by a delimiter
    * @details Please define _NTOOLS_USE_GETLINE to use this class.
@@ -63,9 +67,23 @@ public:
   
 #endif
 
+#ifdef _NTOOLS_USE_OPTIONS
+
+  /**
+   * @brief Class for treat execute options
+   * @details
+   * So far, this class is only usable for the case with
+   * only one value for each option.
+   */
+  class Options {
+  public:
+    static int map(int, char *arg_v[], std::map<std::string, std::string> &);
+  };
+
+#endif
+  
 #ifdef _NTOOLS_USE_INTEGRATION
 
-  //--------- Simpson Integrator (2nd order) ---------
   /**
    * @brief Class for numerical integration using Simpson
    * @details 
@@ -79,7 +97,6 @@ public:
     static double integrate(std::string, std::vector<double>, std::vector<double>);
   };
 
-  //--------- Boole Integrator (4th order) ---------
   /**
    * @brief Class for numerical integration using Boole's rule
    * @details 
@@ -92,7 +109,6 @@ public:
     static double integrate(double, std::vector<double>);
   };
   
-  //--------- Spline Interpolator ---------
   /**
    * @brief Class for spline interpolation of discrete data
    * @details
@@ -120,7 +136,6 @@ public:
 
 #ifdef _NTOOLS_USE_PROGRESSBAR
 
-  //--------- Progress Bar ---------
   /**
    * @brief Class for showing progress bar
    * @details
@@ -139,7 +154,6 @@ public:
 
 #ifdef _NTOOLS_USE_MINUIT2
 
-  //--------- Wrapper for ROOT Minuit2 ---------
   /**
    * @brief Wrapper class for use of Minuit2
    * @details Please define _NTOOLS_USE_MINUIT2 and
@@ -217,6 +231,37 @@ void NTools::DelimiterSplitting::split(const std::string &buffer, const char del
   std::stringstream ss(buffer);
   std::string mbuf;
   while(getline(ss, mbuf, delim)) { if(mbuf != "") v.push_back(stod(mbuf)); }
+}
+
+#endif
+
+#ifdef _NTOOLS_USE_OPTIONS
+
+/**
+ * @brief Generate map from options to values
+ * @param[in] arg_c number of options (including executive name)
+ * @param[in] arg_v input options
+ * @param[out] arg_map
+ * output map from options to values
+ * @return error flag:
+ * -2 if number of options does not match,
+ * -1 if input option format is invalid,
+ * 0 otherwise
+ */
+int NTools::Options::map(int arg_c, char *arg_v[], std::map<std::string, std::string> & arg_map) {
+  if(arg_c % 2 == 0) {
+    std::cout << "Unexpected number of options for NTools::Options::map" << std::endl;
+    return -2;
+  }
+  for(int i = 1; i < arg_c; i += 2) {
+    if(*arg_v[i] != '-') {
+      std::cout << "Unexpected format of options for NTools::Options::map" << std::endl;
+      std::cout << "Please note that all the options should start from the character -" << std::endl;
+      return -1;
+    }
+    arg_map[std::string(arg_v[i])] = std::string(arg_v[i+1]);
+  }
+  return 0;
 }
 
 #endif
