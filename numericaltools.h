@@ -250,7 +250,7 @@ void NTools::DelimiterSplitting::split(const std::string &buffer, const char del
  * 0 otherwise
  */
 int NTools::Options::map(int arg_c, char *arg_v[], std::map<std::string, std::string> & arg_map) {
-  if(arg_c % 2 == 0) {
+  if(arg_c % 2 == 0 || arg_c == 1) {
     std::cout << "Unexpected number of options for NTools::Options::map" << std::endl;
     return -2;
   }
