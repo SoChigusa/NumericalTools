@@ -15,6 +15,7 @@
 /* #define _NTOOLS_CHECK_ASCEND */
 /* #define _NTOOLS_USE_PROGRESSBAR */
 /* #define _NTOOLS_USE_MINUIT2 */
+/* #define _NTOOLS_USE_MINIMIZATION */
 
 #include <iostream>
 #include <math.h>
@@ -178,6 +179,21 @@ public:
         const std::vector<double> &, const std::vector<double> &, const double,
         const unsigned int,
         const ROOT::Minuit2::EMinimizerType arg_type = ROOT::Minuit2::kMigrad);
+  };
+#endif
+
+#ifdef _NTOOLS_USE_MINALGO
+
+  /**
+   * @brief Own equipment of minimization algorithms
+   * @details Please define _NTOOLS_USE_MINALGO.
+   */
+  class MinAlgo {
+  public:
+    static void GradientDescent(double &, std::vector<double> &,
+                                const std::function<double(const double *)> &,
+                                const std::vector<double> &,
+                                const std::vector<double> &, const double);
   };
 #endif
 };
@@ -517,6 +533,34 @@ double NTools::SplineInterpolator::derivative(double arg_x) const {
 }
 
 /**
+ * @brief Access the derivative at given point
+ * @param[in] arg_x coordinate to be accessed
+ * @returns derivative at the point
+ */
+double NTools::SplineInterpolator::derivative(double arg_x) {
+  const int n = endpoint.size() - 1;
+  if (arg_x < endpoint.front() || arg_x > endpoint.back()) {
+    std::cout << endpoint.front() << " " << arg_x << " " << endpoint.back()
+              << std::endl;
+    throw "Point is not between the interpolation region in "
+          "SplineInterpolator::derivative\n";
+  }
+
+  int nregion;
+  if (arg_x == endpoint[n]) {
+    nregion = n - 1;
+  } else {
+    for (int i = 0; i < n; i++) {
+      if (endpoint[i] <= arg_x && arg_x < endpoint[i + 1]) {
+        nregion = i;
+      }
+    }
+  }
+  const double xx = arg_x - endpoint[nregion];
+  return q[nregion] + 2. * r[nregion] * xx + 3. * s[nregion] * xx * xx;
+}
+
+/**
  * @brief Integrate the whole range of interpolation
  * @returns integration result
  */
@@ -706,5 +750,55 @@ void NTools::Minimization::minimize_initial_scan(
   /* } */
 }
 #endif
+
+#ifdef _NTOOLS_USE_MINALGO
+
+/**
+ * @brief Minimize the given function using gradient descend method
+ * @param[out] res_min result minimum value of the function
+ * @param[out] arg_par result minimization parameter set
+ * @param[in] arg_func input function
+ * @param[in] arg_vstart initial values for the parameter set
+ * @param[in] arg_step minimization step for the parameter set
+ * @param[in] arg_tol tolerance setting
+ */
+void NTools::MinAlgo::GradientDescent(
+    double &res_min, std::vector<double> &arg_par,
+    const std::function<double(const double *)> &arg_func,
+    const std::vector<double> &arg_vstart, const std::vector<double> &arg_step,
+    const double arg_tol) {
+  const double dx = 1e-3;
+  const double alpha = 1e-3;
+  const int n = arg_vstart.size();
+  arg_par = arg_vstart;
+
+  auto deriv = [&](std::vector<double> &arg_dy, std::vector<double> &arg_x) {
+    for (int i = 0; i < n; ++i) {
+      if (arg_step[i] != 0.) {
+        std::vector<double> arg_x0(arg_x), arg_x1(arg_x);
+        arg_x0[i] -= arg_step[i] * dx;
+        arg_x1[i] += arg_step[i] * dx;
+        arg_dy[i] = (arg_func(&arg_x1[0]) - arg_func(&arg_x0[0])) / (2. * dx);
+        std::cout << arg_dy[i] << std::endl;
+      }
+    }
+  };
+
+  std::vector<double> dy(n);
+  bool flag = true;
+  while (flag) {
+    std::cout << "error: " << arg_func(&arg_par[0]) << std::endl;
+    deriv(dy, arg_par);
+    flag = false;
+    for (int i = 0; i < n; ++i) {
+      arg_par[i] -= alpha * arg_step[i] * dy[i];
+      if (fabs(dy[i]) > arg_tol)
+        flag = true;
+    }
+  }
+  res_min = arg_func(&arg_par[0]);
+}
+
+#endif // _NTOOLS_USE_MINALGO
 
 #endif // NUMERICALTOOLS_H
