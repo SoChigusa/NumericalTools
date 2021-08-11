@@ -533,34 +533,6 @@ double NTools::SplineInterpolator::derivative(double arg_x) const {
 }
 
 /**
- * @brief Access the derivative at given point
- * @param[in] arg_x coordinate to be accessed
- * @returns derivative at the point
- */
-double NTools::SplineInterpolator::derivative(double arg_x) {
-  const int n = endpoint.size() - 1;
-  if (arg_x < endpoint.front() || arg_x > endpoint.back()) {
-    std::cout << endpoint.front() << " " << arg_x << " " << endpoint.back()
-              << std::endl;
-    throw "Point is not between the interpolation region in "
-          "SplineInterpolator::derivative\n";
-  }
-
-  int nregion;
-  if (arg_x == endpoint[n]) {
-    nregion = n - 1;
-  } else {
-    for (int i = 0; i < n; i++) {
-      if (endpoint[i] <= arg_x && arg_x < endpoint[i + 1]) {
-        nregion = i;
-      }
-    }
-  }
-  const double xx = arg_x - endpoint[nregion];
-  return q[nregion] + 2. * r[nregion] * xx + 3. * s[nregion] * xx * xx;
-}
-
-/**
  * @brief Integrate the whole range of interpolation
  * @returns integration result
  */
