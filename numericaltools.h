@@ -121,10 +121,10 @@ public:
 
   public:
     void interpolate(std::vector<double>, std::vector<double>);
-    double at(double);
-    double derivative(double);
-    double integrate();
-    double integrate(double, double);
+    double at(double) const;
+    double derivative(double) const;
+    double integrate() const;
+    double integrate(double, double) const;
     /**
      * @brief Check if interpolation has been done
      * @details
@@ -132,7 +132,7 @@ public:
      * before using at(double), integrate(), or integrate(double,double) method.
      * @returns true if interpolation has been performed
      */
-    bool IsUsed(void) { return !endpoint.empty(); };
+    bool IsUsed(void) const { return !endpoint.empty(); };
   };
 #endif
 
@@ -464,7 +464,7 @@ void NTools::SplineInterpolator::interpolate(std::vector<double> arg_x,
  * @param[in] arg_x coordinate to be accessed
  * @returns data at the point
  */
-double NTools::SplineInterpolator::at(double arg_x) {
+double NTools::SplineInterpolator::at(double arg_x) const {
   const int n = endpoint.size() - 1;
   if (arg_x < endpoint.front() || arg_x > endpoint.back()) {
     std::cout << endpoint.front() << " " << arg_x << " " << endpoint.back()
@@ -493,7 +493,7 @@ double NTools::SplineInterpolator::at(double arg_x) {
  * @param[in] arg_x coordinate to be accessed
  * @returns derivative at the point
  */
-double NTools::SplineInterpolator::derivative(double arg_x) {
+double NTools::SplineInterpolator::derivative(double arg_x) const {
   const int n = endpoint.size() - 1;
   if (arg_x < endpoint.front() || arg_x > endpoint.back()) {
     std::cout << endpoint.front() << " " << arg_x << " " << endpoint.back()
@@ -520,7 +520,7 @@ double NTools::SplineInterpolator::derivative(double arg_x) {
  * @brief Integrate the whole range of interpolation
  * @returns integration result
  */
-double NTools::SplineInterpolator::integrate() {
+double NTools::SplineInterpolator::integrate() const {
   return integrate(endpoint.front(), endpoint.back());
 }
 
@@ -530,7 +530,8 @@ double NTools::SplineInterpolator::integrate() {
  * @param[in] arg_x1 maximum integration range
  * @returns integration result
  */
-double NTools::SplineInterpolator::integrate(double arg_x0, double arg_x1) {
+double NTools::SplineInterpolator::integrate(double arg_x0,
+                                             double arg_x1) const {
   if (arg_x0 < endpoint.front() || arg_x0 > endpoint.back() ||
       arg_x1 < endpoint.front() || arg_x1 > endpoint.back()) {
     throw "Point is not between the interpolation region in "
