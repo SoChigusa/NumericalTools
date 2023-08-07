@@ -47,7 +47,8 @@
 /**
  * @brief Summarizing class of all functions
  */
-class NTools {
+class NTools
+{
 public:
 #ifdef _NTOOLS_USE_GETLINE
 
@@ -55,7 +56,8 @@ public:
    * @brief Class for splitting string by a delimiter
    * @details Please define _NTOOLS_USE_GETLINE to use this class.
    */
-  class DelimiterSplitting {
+  class DelimiterSplitting
+  {
   public:
     static void split(const std::string &buffer, const std::string &delim_old,
                       std::vector<std::string> &v, const char delim = ' ');
@@ -75,7 +77,8 @@ public:
    * So far, this class is only usable for the case with
    * only one value for each option.
    */
-  class Options {
+  class Options
+  {
   public:
     static int map(int, char *arg_v[], std::map<std::string, std::string> &);
   };
@@ -91,7 +94,8 @@ public:
    * using successive three discrete points.
    * Please define _NTOOLS_USE_INTEGRATION to use this class.
    */
-  class SimpsonIntegrator {
+  class SimpsonIntegrator
+  {
   public:
     static double integrate(std::function<double(double)>, double, double, int);
     static double integrate(std::string, std::vector<double>,
@@ -105,7 +109,8 @@ public:
    * using successive five discrete points.
    * Please define _NTOOLS_USE_INTEGRATION to use this class.
    */
-  class BooleIntegrator {
+  class BooleIntegrator
+  {
   public:
     static double integrate(double, std::vector<double>);
   };
@@ -115,7 +120,8 @@ public:
    * @details
    * Please define _NTOOLS_USE_INTEGRATION to use this class.
    */
-  class SplineInterpolator {
+  class SplineInterpolator
+  {
   private:
     std::vector<double> endpoint;
     std::vector<double> p, q, r, s;
@@ -146,7 +152,8 @@ public:
    * is known in advance.  Please define _NTOOLS_USE_PROGRESSBAR to use this
    * class.
    */
-  class ProgressBar {
+  class ProgressBar
+  {
   private:
     int pr;
     int end;
@@ -166,7 +173,8 @@ public:
    * "ROOTFLAGS = $(shell root-config --cflags)" and
    * "ROOTLIBS = $(shell root-config --libs) -lMinuit2".
    */
-  class Minimization {
+  class Minimization
+  {
   public:
     static void minimize(
         double &, std::vector<double> &, std::vector<double> &,
@@ -188,7 +196,8 @@ public:
    * @brief Own equipment of minimization algorithms
    * @details Please define _NTOOLS_USE_MINALGO.
    */
-  class MinAlgo {
+  class MinAlgo
+  {
   public:
     static void GradientDescent(double &, std::vector<double> &,
                                 const std::function<double(const double *)> &,
@@ -215,12 +224,14 @@ public:
 void NTools::DelimiterSplitting::split(const std::string &buffer,
                                        const std::string &delim_old,
                                        std::vector<std::string> &v,
-                                       const char delim) {
+                                       const char delim)
+{
   // replacement from delim_old -> delim
   const std::string str_delim{delim};
   std::string s(buffer);
   std::string::size_type pos = 0;
-  while ((pos = s.find(delim_old, pos)) != std::string::npos) {
+  while ((pos = s.find(delim_old, pos)) != std::string::npos)
+  {
     s.replace(pos, delim_old.length(), str_delim);
     pos += delim_old.length();
   }
@@ -236,11 +247,13 @@ void NTools::DelimiterSplitting::split(const std::string &buffer,
  */
 void NTools::DelimiterSplitting::split(const std::string &buffer,
                                        const char delim,
-                                       std::vector<std::string> &v) {
+                                       std::vector<std::string> &v)
+{
   v.resize(0);
   std::stringstream ss(buffer);
   std::string mbuf;
-  while (getline(ss, mbuf, delim)) {
+  while (getline(ss, mbuf, delim))
+  {
     if (mbuf != "")
       v.push_back(mbuf);
   }
@@ -254,11 +267,13 @@ void NTools::DelimiterSplitting::split(const std::string &buffer,
  */
 void NTools::DelimiterSplitting::split(const std::string &buffer,
                                        const char delim,
-                                       std::vector<double> &v) {
+                                       std::vector<double> &v)
+{
   v.resize(0);
   std::stringstream ss(buffer);
   std::string mbuf;
-  while (getline(ss, mbuf, delim)) {
+  while (getline(ss, mbuf, delim))
+  {
     if (mbuf != "")
       v.push_back(stod(mbuf));
   }
@@ -280,14 +295,18 @@ void NTools::DelimiterSplitting::split(const std::string &buffer,
  * 0 otherwise
  */
 int NTools::Options::map(int arg_c, char *arg_v[],
-                         std::map<std::string, std::string> &arg_map) {
-  if (arg_c % 2 == 0 || arg_c == 1) {
+                         std::map<std::string, std::string> &arg_map)
+{
+  if (arg_c % 2 == 0 || arg_c == 1)
+  {
     std::cout << "Unexpected number of options for NTools::Options::map"
               << std::endl;
     return -2;
   }
-  for (int i = 1; i < arg_c; i += 2) {
-    if (*arg_v[i] != '-') {
+  for (int i = 1; i < arg_c; i += 2)
+  {
+    if (*arg_v[i] != '-')
+    {
       std::cout << "Unexpected format of options for NTools::Options::map"
                 << std::endl;
       std::cout << "Please note that all the options should start from the "
@@ -314,16 +333,18 @@ int NTools::Options::map(int arg_c, char *arg_v[],
  */
 double NTools::SimpsonIntegrator::integrate(std::function<double(double)> arg_f,
                                             double arg_x0, double arg_x1,
-                                            int arg_npts) {
+                                            int arg_npts)
+{
   double res = 0.;
   double xmd;
   double xlg = arg_x0;
   double dxlg = (arg_x1 - arg_x0) / arg_npts;
   double fsm, fmd;
   double flg = arg_f(arg_x0);
-  for (int i = 0; i < arg_npts; ++i) {
+  for (int i = 0; i < arg_npts; ++i)
+  {
     xmd = xlg + 0.5 * dxlg;
-    xlg = xlg + dxlg;
+    xlg = std::min(arg_x1, xlg + dxlg);
     fsm = flg;
     fmd = arg_f(xmd);
     flg = arg_f(xlg);
@@ -346,25 +367,33 @@ double NTools::SimpsonIntegrator::integrate(std::function<double(double)> arg_f,
  */
 double NTools::SimpsonIntegrator::integrate(std::string arg_flag,
                                             std::vector<double> arg_x,
-                                            std::vector<double> arg_f) {
+                                            std::vector<double> arg_f)
+{
   const int nmesh = arg_x.size();
-  if (arg_f.size() != nmesh) {
+  if (arg_f.size() != nmesh)
+  {
     throw "Mismatch between # of mesh of x and y\n";
   }
 
   double res = 0.;
-  if (arg_flag == "Simpson") {
-    if (nmesh % 2 == 0) {
+  if (arg_flag == "Simpson")
+  {
+    if (nmesh % 2 == 0)
+    {
       throw "Odd # of date including start and end point is needed\n";
-    } else if (nmesh < 3) {
+    }
+    else if (nmesh < 3)
+    {
       throw "Too small # of mesh\n";
     }
 
     const double dx = arg_x[2] - arg_x[0];
     double xmd = arg_x[1];
-    for (int i = 1; i < nmesh - 1; i = i + 2) {
+    for (int i = 1; i < nmesh - 1; i = i + 2)
+    {
       if (fabs(arg_x[i - 1] - (xmd - 0.5 * dx)) > 1.e-10 ||
-          fabs(arg_x[i] - xmd) > 1.e-10) {
+          fabs(arg_x[i] - xmd) > 1.e-10)
+      {
         throw "Non-universal choice of dx\n";
       }
       res += (arg_f[i - 1] + 4. * arg_f[i] + arg_f[i + 1]) * dx / 6.;
@@ -372,13 +401,15 @@ double NTools::SimpsonIntegrator::integrate(std::string arg_flag,
     }
   }
 
-  else if (arg_flag == "Spline") {
+  else if (arg_flag == "Spline")
+  {
     NTools::SplineInterpolator mySpline;
     mySpline.interpolate(arg_x, arg_f);
     res = mySpline.integrate();
   }
 
-  else {
+  else
+  {
     throw "Unsupported flag for SimpsonIntegrator\n";
   }
   return res;
@@ -394,9 +425,11 @@ double NTools::SimpsonIntegrator::integrate(std::string arg_flag,
  * @return double integration result
  */
 double NTools::BooleIntegrator::integrate(double arg_dx,
-                                          std::vector<double> arg_f) {
+                                          std::vector<double> arg_f)
+{
   const int nspac = arg_f.size() - 1;
-  if (nspac % 4 != 0) {
+  if (nspac % 4 != 0)
+  {
     std::cout << "BooleIntegrator: the number of spacing should be 4 times "
                  "some integer."
               << std::endl;
@@ -404,7 +437,8 @@ double NTools::BooleIntegrator::integrate(double arg_dx,
   }
   double res = 0.;
   static const double to45 = 2. / 45.;
-  for (int i = 0; i < nspac; i += 4) { // 4th order
+  for (int i = 0; i < nspac; i += 4)
+  { // 4th order
     res += to45 * (7. * arg_f[i] + 32. * arg_f[i + 1] + 12. * arg_f[i + 2] +
                    32. * arg_f[i + 3] + 7. * arg_f[i + 4]);
   }
@@ -419,18 +453,22 @@ double NTools::BooleIntegrator::integrate(double arg_dx,
  * @param[in] arg_y discrete data set
  */
 void NTools::SplineInterpolator::interpolate(std::vector<double> arg_x,
-                                             std::vector<double> arg_y) {
+                                             std::vector<double> arg_y)
+{
   const int n = arg_x.size() - 1;
-  if (arg_y.size() != n + 1) {
+  if (arg_y.size() != n + 1)
+  {
     throw "Mismatch between # of x and y points\n";
   }
 
 #ifdef _NTOOLS_CHECK_ASCEND
-  else {
+  else
+  {
     std::vector<double> check;
     std::copy(arg_x.begin(), arg_x.end(), std::back_inserter(check));
     std::sort(check.begin(), check.end());
-    if (!std::equal(arg_x.begin(), arg_x.end(), check.begin())) {
+    if (!std::equal(arg_x.begin(), arg_x.end(), check.begin()))
+    {
       throw "Data should be ascending order in x\n";
     }
   }
@@ -445,29 +483,35 @@ void NTools::SplineInterpolator::interpolate(std::vector<double> arg_x,
   s.resize(n);
 
   int i;
-  for (i = 0; i < n; i++) {
+  for (i = 0; i < n; i++)
+  {
     h[i] = arg_x[i + 1] - arg_x[i];
   }
-  for (i = 1; i < n; i++) {
+  for (i = 1; i < n; i++)
+  {
     b[i] = 2. * (h[i] + h[i - 1]);
     d[i] = 3. * ((arg_y[i + 1] - arg_y[i]) / h[i] -
                  (arg_y[i] - arg_y[i - 1]) / h[i - 1]);
   }
   g[1] = h[1] / b[1];
-  for (i = 2; i < n - 1; i++) {
+  for (i = 2; i < n - 1; i++)
+  {
     g[i] = h[i] / (b[i] - h[i - 1] * g[i - 1]);
   }
   u[1] = d[1] / b[1];
-  for (i = 2; i < n; i++) {
+  for (i = 2; i < n; i++)
+  {
     u[i] = (d[i] - h[i - 1] * u[i - 1]) / (b[i] - h[i - 1] * g[i - 1]);
   }
   r[0] = 0;
   r[n] = 0;
   r[n - 1] = u[n - 1];
-  for (i = n - 2; i >= 1; i--) {
+  for (i = n - 2; i >= 1; i--)
+  {
     r[i] = u[i] - g[i] * r[i + 1];
   }
-  for (i = 0; i < n; i++) {
+  for (i = 0; i < n; i++)
+  {
     p[i] = arg_y[i];
     q[i] =
         (arg_y[i + 1] - arg_y[i]) / h[i] - h[i] * (r[i + 1] + 2. * r[i]) / 3.;
@@ -480,9 +524,11 @@ void NTools::SplineInterpolator::interpolate(std::vector<double> arg_x,
  * @param[in] arg_x coordinate to be accessed
  * @returns data at the point
  */
-double NTools::SplineInterpolator::at(double arg_x) const {
+double NTools::SplineInterpolator::at(double arg_x) const
+{
   const int n = endpoint.size() - 1;
-  if (arg_x < endpoint.front() || arg_x > endpoint.back()) {
+  if (arg_x < endpoint.front() || arg_x > endpoint.back())
+  {
     std::cout << endpoint.front() << " " << arg_x << " " << endpoint.back()
               << std::endl;
     throw "Point is not between the interpolation region in "
@@ -490,11 +536,16 @@ double NTools::SplineInterpolator::at(double arg_x) const {
   }
 
   int nregion;
-  if (arg_x == endpoint[n]) {
+  if (arg_x == endpoint[n])
+  {
     nregion = n - 1;
-  } else {
-    for (int i = 0; i < n; i++) {
-      if (endpoint[i] <= arg_x && arg_x < endpoint[i + 1]) {
+  }
+  else
+  {
+    for (int i = 0; i < n; i++)
+    {
+      if (endpoint[i] <= arg_x && arg_x < endpoint[i + 1])
+      {
         nregion = i;
       }
     }
@@ -509,9 +560,11 @@ double NTools::SplineInterpolator::at(double arg_x) const {
  * @param[in] arg_x coordinate to be accessed
  * @returns derivative at the point
  */
-double NTools::SplineInterpolator::derivative(double arg_x) const {
+double NTools::SplineInterpolator::derivative(double arg_x) const
+{
   const int n = endpoint.size() - 1;
-  if (arg_x < endpoint.front() || arg_x > endpoint.back()) {
+  if (arg_x < endpoint.front() || arg_x > endpoint.back())
+  {
     std::cout << endpoint.front() << " " << arg_x << " " << endpoint.back()
               << std::endl;
     throw "Point is not between the interpolation region in "
@@ -519,11 +572,16 @@ double NTools::SplineInterpolator::derivative(double arg_x) const {
   }
 
   int nregion;
-  if (arg_x == endpoint[n]) {
+  if (arg_x == endpoint[n])
+  {
     nregion = n - 1;
-  } else {
-    for (int i = 0; i < n; i++) {
-      if (endpoint[i] <= arg_x && arg_x < endpoint[i + 1]) {
+  }
+  else
+  {
+    for (int i = 0; i < n; i++)
+    {
+      if (endpoint[i] <= arg_x && arg_x < endpoint[i + 1])
+      {
         nregion = i;
       }
     }
@@ -536,7 +594,8 @@ double NTools::SplineInterpolator::derivative(double arg_x) const {
  * @brief Integrate the whole range of interpolation
  * @returns integration result
  */
-double NTools::SplineInterpolator::integrate() const {
+double NTools::SplineInterpolator::integrate() const
+{
   return integrate(endpoint.front(), endpoint.back());
 }
 
@@ -547,12 +606,16 @@ double NTools::SplineInterpolator::integrate() const {
  * @returns integration result
  */
 double NTools::SplineInterpolator::integrate(double arg_x0,
-                                             double arg_x1) const {
+                                             double arg_x1) const
+{
   if (arg_x0 < endpoint.front() || arg_x0 > endpoint.back() ||
-      arg_x1 < endpoint.front() || arg_x1 > endpoint.back()) {
+      arg_x1 < endpoint.front() || arg_x1 > endpoint.back())
+  {
     throw "Point is not between the interpolation region in "
           "SplineInterpolator::integrate\n";
-  } else if (arg_x0 > arg_x1) {
+  }
+  else if (arg_x0 > arg_x1)
+  {
     throw "Integration with x0 > x1 is not supported\n";
   }
 
@@ -560,22 +623,28 @@ double NTools::SplineInterpolator::integrate(double arg_x0,
   double res = 0.;
   double sub_x0, sub_x1;
   const int n = endpoint.size() - 1;
-  for (int i = 0; i < n; i++) {
-    if (fsum == 0) {
-      if (endpoint[i + 1] > arg_x0) {
+  for (int i = 0; i < n; i++)
+  {
+    if (fsum == 0)
+    {
+      if (endpoint[i + 1] > arg_x0)
+      {
         fsum = 1;
       }
     }
-    if (fsum == 1) {
+    if (fsum == 1)
+    {
       sub_x0 = std::max(endpoint[i], arg_x0);
       sub_x1 = std::min(endpoint[i + 1], arg_x1);
-      auto F = [=](double arg_x) {
+      auto F = [=](double arg_x)
+      {
         double xx = arg_x - endpoint[i];
         return p[i] * xx + q[i] * xx * xx / 2. + r[i] * xx * xx * xx / 3. +
                s[i] * xx * xx * xx * xx / 4.;
       };
       res += F(sub_x1) - F(sub_x0);
-      if (endpoint[i + 1] >= arg_x1) {
+      if (endpoint[i + 1] >= arg_x1)
+      {
         fsum = 2;
       }
     }
@@ -590,7 +659,8 @@ double NTools::SplineInterpolator::integrate(double arg_x0,
  * @brief Constructor with initial setting
  * @param[in] arg_e finish time
  */
-NTools::ProgressBar::ProgressBar(int arg_e) : pr(0), end(arg_e) {
+NTools::ProgressBar::ProgressBar(int arg_e) : pr(0), end(arg_e)
+{
   std::cout << "------------------ ProgressBar -------------------"
             << std::endl;
 }
@@ -598,12 +668,15 @@ NTools::ProgressBar::ProgressBar(int arg_e) : pr(0), end(arg_e) {
 /**
  * @brief Advance the time by one
  */
-void NTools::ProgressBar::tick() {
+void NTools::ProgressBar::tick()
+{
   pr++;
-  if (floor(50. * (pr - 1) / end) < floor(50. * pr / end)) {
+  if (floor(50. * (pr - 1) / end) < floor(50. * pr / end))
+  {
     std::cout << "*" << std::flush;
   }
-  if (pr == end) {
+  if (pr == end)
+  {
     std::cout << std::endl;
     std::cout << "--------------------------------------------------"
               << std::endl;
@@ -630,10 +703,12 @@ void NTools::Minimization::minimize(
     std::vector<double> &arg_parerr,
     const std::function<double(const double *)> &arg_func,
     const std::vector<double> &arg_vstart, const std::vector<double> &arg_step,
-    const double arg_tol, const ROOT::Minuit2::EMinimizerType arg_type) {
+    const double arg_tol, const ROOT::Minuit2::EMinimizerType arg_type)
+{
   size_t nArgs = arg_vstart.size();
   ROOT::Math::Functor F(
-      [&arg_func, &nArgs](const double *p_phiI) { return arg_func(p_phiI); },
+      [&arg_func, &nArgs](const double *p_phiI)
+      { return arg_func(p_phiI); },
       nArgs);
   ROOT::Minuit2::Minuit2Minimizer min(arg_type);
   /* min.SetMaxFunctionCalls(1000000); */
@@ -641,7 +716,8 @@ void NTools::Minimization::minimize(
   min.SetFunction(F);
 
   double step;
-  for (int i = 0; i < nArgs; i++) {
+  for (int i = 0; i < nArgs; i++)
+  {
     step = arg_step.at(i);
     if (step == 0.)
       min.SetFixedVariable(i, std::to_string(i), arg_vstart.at(i));
@@ -654,7 +730,8 @@ void NTools::Minimization::minimize(
   const double *min_grad = min.Errors();
   arg_par.resize(nArgs);
   arg_parerr.resize(nArgs);
-  for (int i = 0; i < nArgs; i++) {
+  for (int i = 0; i < nArgs; i++)
+  {
     arg_par[i] = *(min_x + i);
     arg_parerr[i] = *(min_grad + i);
   }
@@ -693,19 +770,23 @@ void NTools::Minimization::minimize_initial_scan(
     const std::function<double(const double *)> &arg_func,
     const std::vector<double> &arg_vstart, const std::vector<double> &arg_step,
     const double arg_tol, const unsigned int nscan,
-    const ROOT::Minuit2::EMinimizerType arg_type) {
+    const ROOT::Minuit2::EMinimizerType arg_type)
+{
   res_min = 1.e5;
   TRandom3 rgen(1);
   double res_tmp;
-  for (int i = 0; i < nscan; i++) {
+  for (int i = 0; i < nscan; i++)
+  {
     std::vector<double> par, parerr;
     std::vector<double> vstart(arg_vstart.size());
-    for (int j = 0; j < vstart.size(); j++) {
+    for (int j = 0; j < vstart.size(); j++)
+    {
       vstart[j] = rgen.Gaus(arg_vstart[j], 2. * arg_step[j]);
     }
     NTools::Minimization::minimize(res_tmp, par, parerr, arg_func, vstart,
                                    arg_step, arg_tol, arg_type);
-    if (res_min > res_tmp) {
+    if (res_min > res_tmp)
+    {
       res_min = res_tmp;
       arg_par = par;
       arg_parerr = parerr;
@@ -738,15 +819,19 @@ void NTools::MinAlgo::GradientDescent(
     double &res_min, std::vector<double> &arg_par,
     const std::function<double(const double *)> &arg_func,
     const std::vector<double> &arg_vstart, const std::vector<double> &arg_step,
-    const double arg_tol) {
+    const double arg_tol)
+{
   const double dx = 1e-3;
   const double alpha = 1e-3;
   const int n = arg_vstart.size();
   arg_par = arg_vstart;
 
-  auto deriv = [&](std::vector<double> &arg_dy, std::vector<double> &arg_x) {
-    for (int i = 0; i < n; ++i) {
-      if (arg_step[i] != 0.) {
+  auto deriv = [&](std::vector<double> &arg_dy, std::vector<double> &arg_x)
+  {
+    for (int i = 0; i < n; ++i)
+    {
+      if (arg_step[i] != 0.)
+      {
         std::vector<double> arg_x0(arg_x), arg_x1(arg_x);
         arg_x0[i] -= arg_step[i] * dx;
         arg_x1[i] += arg_step[i] * dx;
@@ -758,11 +843,13 @@ void NTools::MinAlgo::GradientDescent(
 
   std::vector<double> dy(n);
   bool flag = true;
-  while (flag) {
+  while (flag)
+  {
     std::cout << "error: " << arg_func(&arg_par[0]) << std::endl;
     deriv(dy, arg_par);
     flag = false;
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i)
+    {
       arg_par[i] -= alpha * arg_step[i] * dy[i];
       if (fabs(dy[i]) > arg_tol)
         flag = true;
